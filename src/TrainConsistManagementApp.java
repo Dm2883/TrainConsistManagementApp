@@ -1,4 +1,4 @@
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class TrainConsistManagementApp {
@@ -6,26 +6,25 @@ public class TrainConsistManagementApp {
     public static void main(String[] args) {
 
         System.out.println("=====================================");
-        System.out.println("UC3 - Track Unique Bogie IDs");
+        System.out.println("UC5 - Preserve Insertion Order of Bogies");
         System.out.println("=====================================");
 
-        // Create HashSet
-        Set<String> bogies = new HashSet<>();
+        // Create LinkedHashSet
+        Set<String> formation = new LinkedHashSet<>();
 
-        // Add bogie IDs (with duplicates)
-        bogies.add("BG101");
-        bogies.add("BG102");
-        bogies.add("BG103");
-        bogies.add("BG104");
+        // Add bogies
+        formation.add("Engine");
+        formation.add("Sleeper");
+        formation.add("Cargo");
+        formation.add("Guard");
 
-        // Duplicate entries
-        bogies.add("BG101");
-        bogies.add("BG102");
+        // Try adding duplicate
+        formation.add("Sleeper");
 
-        // Display result
-        System.out.println("\nUnique Bogie IDs:");
-        System.out.println(bogies);
+        // Display formation
+        System.out.println("\nFinal Train Formation:");
+        System.out.println(formation);
 
-        System.out.println("\nDuplicates are automatically removed.");
+        System.out.println("\nDuplicates are not allowed, order is preserved.");
     }
 }
