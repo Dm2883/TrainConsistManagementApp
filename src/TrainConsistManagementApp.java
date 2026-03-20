@@ -17,7 +17,7 @@ public class TrainConsistManagementApp {
         passengerBogies.add("AC Chair");
         passengerBogies.add("First Class");
 
-        // Display after adding
+       
         System.out.println("\nAfter Adding Bogies:");
         System.out.println("Passenger Bogies: " + passengerBogies);
 
