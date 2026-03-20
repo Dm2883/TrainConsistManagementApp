@@ -11,7 +11,6 @@ public class TrainConsistManagementApp {
 
         // Create HashMap
         Map<String, Integer> capacityMap = new HashMap<>();
-
         // Add bogies with capacity
         capacityMap.put("Sleeper", 72);
         capacityMap.put("AC", 50);
