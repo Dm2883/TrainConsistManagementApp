@@ -9,7 +9,7 @@ public class TrainConsistManagementApp {
         System.out.println("UC4 - Maintain Ordered Bogie Consist");
         System.out.println("=====================================");
 
-        // Create LinkedList
+        
         List<String> trainConsist = new LinkedList<>();
 
         // Add bogies
