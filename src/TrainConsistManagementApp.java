@@ -1,57 +1,60 @@
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TrainConsistManagementApp {
 
-    static class Bogie {
-        private String name;
-        private int capacity;
+    // Regex explicitly defining format TRN-XXXX (4 digits)
+    private static final Pattern TRAIN_ID_PATTERN = Pattern.compile("^TRN-\\d{4}$");
 
-        public Bogie(String name, int capacity) {
-            this.name = name;
-            this.capacity = capacity;
-        }
+    // Regex explicitly defining format PET-XX (2 uppercase letters)
+    private static final Pattern CARGO_CODE_PATTERN = Pattern.compile("^PET-[A-Z]{2}$");
 
-        public String getName() {
-            return name;
-        }
+    public static boolean validateTrainId(String trainId) {
+        if (trainId == null) return false;
+        Matcher matcher = TRAIN_ID_PATTERN.matcher(trainId);
+        return matcher.matches();
+    }
 
-        public int getCapacity() {
-            return capacity;
-        }
-
-        @Override
-        public String toString() {
-            return "Bogie [name=" + name + ", capacity=" + capacity + "]";
-        }
+    public static boolean validateCargoCode(String cargoCode) {
+        if (cargoCode == null) return false;
+        Matcher matcher = CARGO_CODE_PATTERN.matcher(cargoCode);
+        return matcher.matches();
     }
 
     public static void main(String[] args) {
         System.out.println("=== Train Consist Management App ===");
+        System.out.println("--- Validation Execution ---");
 
-        // Create a List<Bogie> to store passenger bogies (simulating UC7 creation)
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("Second Class", 90));
-        bogies.add(new Bogie("First Class", 24));
+        System.out.println("\n[1] Train ID Validation Testing");
+        List<String> trainIds = Arrays.asList(
+                "TRN-1234",   // Valid
+                "TRAIN12",    // Invalid: Wrong prefix
+                "TRN12A",     // Invalid: Missing dash and letters present
+                "1234-TRN",   // Invalid: Reverse order
+                "TRN-123",    // Invalid: Too few digits
+                "TRN-12345",  // Invalid: Too many digits
+                ""            // Invalid: Empty string
+        );
 
-        System.out.println("Original Bogie List:");
-        bogies.forEach(System.out::println);
+        for (String id : trainIds) {
+            System.out.println(String.format(" %-12s -> Valid? %b", "'" + id + "'", validateTrainId(id)));
+        }
 
-        System.out.println("\n--- Filtering Logic Execution ---");
+        System.out.println("\n[2] Cargo Code Validation Testing");
+        List<String> cargoCodes = Arrays.asList(
+                "PET-AB",     // Valid
+                "PET-ab",     // Invalid: Lowercase
+                "PET123",     // Invalid: Digits
+                "AB-PET",     // Invalid: Reverse
+                "PET-A",      // Invalid: Too few characters
+                "PET-ABC",    // Invalid: Too many characters
+                ""            // Invalid: Empty string
+        );
 
-        // Apply filter(b -> b.capacity > 60)
-        int threshold = 60;
-        List<Bogie> highCapacityBogies = bogies.stream()
-                .filter(b -> b.getCapacity() > threshold)
-                .collect(Collectors.toList());
-
-        System.out.println("\nBogies with capacity > " + threshold + ":");
-        highCapacityBogies.forEach(System.out::println);
-
-        System.out.println("\n--- Original Collection Integrity ---");
-        System.out.println("Original List Size: " + bogies.size() + " (Unchanged)");
+        for (String code : cargoCodes) {
+            System.out.println(String.format(" %-12s -> Valid? %b", "'" + code + "'", validateCargoCode(code)));
+        }
     }
 }
