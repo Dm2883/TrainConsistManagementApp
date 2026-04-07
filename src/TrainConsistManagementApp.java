@@ -30,8 +30,6 @@ public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
         System.out.println("=== Train Consist Management App ===");
-
-        // Create a List of bogies with intentional duplicates to test grouping logic
         List<Bogie> bogies = new ArrayList<>();
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("Sleeper", 72)); // Second sleeper
