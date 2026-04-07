@@ -1,20 +1,21 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TrainConsistManagementApp {
 
     static class Bogie {
-        private String name;
+        private String type;
         private int capacity;
 
-        public Bogie(String name, int capacity) {
-            this.name = name;
+        public Bogie(String type, int capacity) {
+            this.type = type;
             this.capacity = capacity;
         }
 
-        public String getName() {
-            return name;
+        public String getType() {
+            return type;
         }
 
         public int getCapacity() {
@@ -23,35 +24,37 @@ public class TrainConsistManagementApp {
 
         @Override
         public String toString() {
-            return "Bogie [name=" + name + ", capacity=" + capacity + "]";
+            return "Bogie [type=" + type + ", capacity=" + capacity + "]";
         }
     }
 
     public static void main(String[] args) {
         System.out.println("=== Train Consist Management App ===");
 
-        // Create a List<Bogie> to store passenger bogies (simulating UC7 creation)
+        // Create a List of bogies with intentional duplicates to test grouping logic
         List<Bogie> bogies = new ArrayList<>();
         bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("Sleeper", 72)); // Second sleeper
         bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("Second Class", 90));
         bogies.add(new Bogie("First Class", 24));
+        bogies.add(new Bogie("First Class", 24)); // Second first class
 
-        System.out.println("Original Bogie List:");
-        bogies.forEach(System.out::println);
+        System.out.println("Original Bogie List Size: " + bogies.size());
 
-        System.out.println("\n--- Filtering Logic Execution ---");
+        System.out.println("\n--- Executing Grouping Operation ---");
+        // Apply Collectors.groupingBy() based on bogie type
+        Map<String, List<Bogie>> groupedBogies = bogies.stream()
+                .collect(Collectors.groupingBy(Bogie::getType));
 
-        // Apply filter(b -> b.capacity > 60)
-        int threshold = 60;
-        List<Bogie> highCapacityBogies = bogies.stream()
-                .filter(b -> b.getCapacity() > threshold)
-                .collect(Collectors.toList());
+        // Display the grouped structure clearly showing keys and lists
+        System.out.println("\nGrouped Bogie Structure:");
+        for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
+            System.out.println("Category [" + entry.getKey() + "] contains " + entry.getValue().size() + " bogies:");
+            entry.getValue().forEach(b -> System.out.println("   -> " + b));
+        }
 
-        System.out.println("\nBogies with capacity > " + threshold + ":");
-        highCapacityBogies.forEach(System.out::println);
-
-        System.out.println("\n--- Original Collection Integrity ---");
-        System.out.println("Original List Size: " + bogies.size() + " (Unchanged)");
+        // Integrity check
+        System.out.println("\n--- Integrity Check ---");
+        System.out.println("Collection remains unmodified? " + (bogies.size() == 5));
     }
 }
