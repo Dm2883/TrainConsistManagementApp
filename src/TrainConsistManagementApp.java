@@ -1,14 +1,22 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class TrainConsistManagementApp {
 
+    // Custom Exception representing business validation failure
+    static class InvalidCapacityException extends Exception {
+        public InvalidCapacityException(String message) {
+            super(message);
+        }
+    }
+
+    // Bogie class with Fail-Fast Configuration
     static class Bogie {
         private String name;
         private int capacity;
 
-        public Bogie(String name, int capacity) {
+        public Bogie(String name, int capacity) throws InvalidCapacityException {
+            // Enforcement of Railway Rules directly in constructor
+            if (capacity <= 0) {
+                throw new InvalidCapacityException("Capacity must be greater than zero");
+            }
             this.name = name;
             this.capacity = capacity;
         }
@@ -29,29 +37,32 @@ public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
         System.out.println("=== Train Consist Management App ===");
+        System.out.println("--- UC14: Handling Invalid Bogie Capacity ---\n");
 
-        // Create a List<Bogie> to store passenger bogies (simulating UC7 creation)
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("Second Class", 90));
-        bogies.add(new Bogie("First Class", 24));
+        System.out.println("[Test 1: Valid Capacity Execution]");
+        try {
+            Bogie validBogie = new Bogie("Sleeper", 72);
+            System.out.println("Success! Created -> " + validBogie);
+        } catch (InvalidCapacityException e) {
+            System.out.println("FAILED: Validation Caught Exception: " + e.getMessage());
+        }
 
-        System.out.println("Original Bogie List:");
-        bogies.forEach(System.out::println);
+        System.out.println("\n[Test 2: Negative Capacity Evaluation]");
+        try {
+            System.out.println("Attempting to create AC Chair with -10 seating...");
+            new Bogie("AC Chair", -10);
+            System.out.println("FAIL: System incorrectly allowed creation!");
+        } catch (InvalidCapacityException e) {
+            System.out.println("Success! Validation actively Caught Exception -> " + e.getMessage());
+        }
 
-        System.out.println("\n--- Filtering Logic Execution ---");
-
-        // Apply filter(b -> b.capacity > 60)
-        int threshold = 60;
-        List<Bogie> highCapacityBogies = bogies.stream()
-                .filter(b -> b.getCapacity() > threshold)
-                .collect(Collectors.toList());
-
-        System.out.println("\nBogies with capacity > " + threshold + ":");
-        highCapacityBogies.forEach(System.out::println);
-
-        System.out.println("\n--- Original Collection Integrity ---");
-        System.out.println("Original List Size: " + bogies.size() + " (Unchanged)");
+        System.out.println("\n[Test 3: Zero Capacity Evaluation]");
+        try {
+            System.out.println("Attempting to create First Class with 0 seating...");
+            new Bogie("First Class", 0);
+            System.out.println("FAIL: System incorrectly allowed creation!");
+        } catch (InvalidCapacityException e) {
+            System.out.println("Success! Validation actively Caught Exception -> " + e.getMessage());
+        }
     }
 }
