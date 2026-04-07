@@ -1,57 +1,70 @@
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TrainConsistManagementApp {
 
-    static class Bogie {
-        private String name;
-        private int capacity;
+    static class GoodsBogie {
+        private String type;
+        private String cargo;
 
-        public Bogie(String name, int capacity) {
-            this.name = name;
-            this.capacity = capacity;
+        public GoodsBogie(String type, String cargo) {
+            this.type = type;
+            this.cargo = cargo;
         }
 
-        public String getName() {
-            return name;
+        public String getType() {
+            return type;
         }
 
-        public int getCapacity() {
-            return capacity;
+        public String getCargo() {
+            return cargo;
         }
 
         @Override
         public String toString() {
-            return "Bogie [name=" + name + ", capacity=" + capacity + "]";
+            return "GoodsBogie [type=" + type + ", cargo=" + cargo + "]";
         }
+    }
+
+    // Encapsulated safety compliance logic using Streams API and allMatch()
+    public static boolean checkSafetyCompliance(List<GoodsBogie> bogies) {
+        return bogies.stream()
+                .allMatch(b -> !b.getType().equalsIgnoreCase("Cylindrical")
+                        || b.getCargo().equalsIgnoreCase("Petroleum"));
     }
 
     public static void main(String[] args) {
         System.out.println("=== Train Consist Management App ===");
+        System.out.println("--- UC12: Safety Compliance Execution ---\n");
 
-        // Create a List<Bogie> to store passenger bogies (simulating UC7 creation)
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("Second Class", 90));
-        bogies.add(new Bogie("First Class", 24));
+        System.out.println("[Test 1: All Valid Bogies]");
+        List<GoodsBogie> safeTrain = Arrays.asList(
+                new GoodsBogie("Cylindrical", "Petroleum"),
+                new GoodsBogie("Box", "Coal"),
+                new GoodsBogie("Open", "Grain")
+        );
+        safeTrain.forEach(System.out::println);
+        System.out.println("-> Safety Compliant? " + checkSafetyCompliance(safeTrain) + "\n");
 
-        System.out.println("Original Bogie List:");
-        bogies.forEach(System.out::println);
+        System.out.println("[Test 2: Invalid Cylindrical Cargo]");
+        List<GoodsBogie> unsafeTrain = Arrays.asList(
+                new GoodsBogie("Cylindrical", "Coal"), // Rule violation!
+                new GoodsBogie("Box", "Grain")
+        );
+        unsafeTrain.forEach(System.out::println);
+        System.out.println("-> Safety Compliant? " + checkSafetyCompliance(unsafeTrain) + "\n");
 
-        System.out.println("\n--- Filtering Logic Execution ---");
+        System.out.println("[Test 3: Non-Cylindrical with Flexible Cargo]");
+        List<GoodsBogie> flexibleTrain = Arrays.asList(
+                new GoodsBogie("Box", "Petroleum"),    // Non-cylindrical can carry other loads
+                new GoodsBogie("Open", "Coal")
+        );
+        flexibleTrain.forEach(System.out::println);
+        System.out.println("-> Safety Compliant? " + checkSafetyCompliance(flexibleTrain) + "\n");
 
-        // Apply filter(b -> b.capacity > 60)
-        int threshold = 60;
-        List<Bogie> highCapacityBogies = bogies.stream()
-                .filter(b -> b.getCapacity() > threshold)
-                .collect(Collectors.toList());
-
-        System.out.println("\nBogies with capacity > " + threshold + ":");
-        highCapacityBogies.forEach(System.out::println);
-
-        System.out.println("\n--- Original Collection Integrity ---");
-        System.out.println("Original List Size: " + bogies.size() + " (Unchanged)");
+        System.out.println("[Test 4: Empty Train Edge Case]");
+        List<GoodsBogie> emptyTrain = Collections.emptyList();
+        System.out.println("-> Empty Train Data Safety Compliant? " + checkSafetyCompliance(emptyTrain) + "\n");
     }
 }
