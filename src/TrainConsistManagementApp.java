@@ -1,32 +1,51 @@
-import java.util.HashMap;
-import java.util.Map;
-
 public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
 
-        System.out.println("=====================================");
-        System.out.println("UC6 - Map Bogie to Capacity (HashMap)");
-        System.out.println("=====================================");
+        // Scenario 1: Empty train
+        String[] emptyTrain = {};
 
-        // Create HashMap
-        Map<String, Integer> capacityMap = new HashMap<>();
-
-        // Add bogies with capacity
-        capacityMap.put("Sleeper", 72);
-        capacityMap.put("AC", 50);
-        capacityMap.put("FirstClass", 40);
-        capacityMap.put("Cargo", 100);
-
-        // Display all bogies with capacity
-        System.out.println("\nBogie Capacity Details:");
-        for (Map.Entry<String, Integer> entry : capacityMap.entrySet()) {
-            System.out.println(entry.getKey() + " → Capacity: " + entry.getValue());
+        try {
+            searchBogie(emptyTrain, "BG101");
+        } catch (IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
-        // Access specific bogie
-        System.out.println("\nCapacity of Sleeper: " + capacityMap.get("Sleeper"));
+        // Scenario 2: Train with bogies
+        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412"};
 
-        System.out.println("\nUC6 operations completed successfully...");
+        try {
+            searchBogie(bogieIds, "BG309");
+        } catch (IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    // Method implementing Fail-Fast Defensive Check
+    public static void searchBogie(String[] bogieIds, String searchId) {
+
+        // ✅ State Validation (Fail-Fast)
+        if (bogieIds == null || bogieIds.length == 0) {
+            throw new IllegalStateException(
+                    "Train has no bogies. Search operation cannot be performed."
+            );
+        }
+
+        // ---- Linear Search ----
+        boolean found = false;
+
+        for (String id : bogieIds) {
+            if (id.equals(searchId)) {
+                found = true;
+                break;
+            }
+        }
+
+        // ---- Result ----
+        if (found) {
+            System.out.println("Bogie found: " + searchId);
+        } else {
+            System.out.println("Bogie not found: " + searchId);
+        }
     }
 }
