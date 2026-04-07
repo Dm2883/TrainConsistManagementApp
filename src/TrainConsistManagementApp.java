@@ -18,6 +18,7 @@ public class TrainConsistManagementApp {
         boolean found = false;
 
         while (low <= high) {
+            
 
             int mid = (low + high) / 2;
 
