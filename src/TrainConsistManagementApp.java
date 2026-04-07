@@ -1,6 +1,6 @@
 public class TrainConsistManagementApp {
 
-    // Custom Exception representing business validation failure
+    
     static class InvalidCapacityException extends Exception {
         public InvalidCapacityException(String message) {
             super(message);
