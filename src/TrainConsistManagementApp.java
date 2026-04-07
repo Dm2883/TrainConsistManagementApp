@@ -1,32 +1,57 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TrainConsistManagementApp {
 
-    public static void main(String[] args) {
+    static class Bogie {
+        private String name;
+        private int capacity;
 
-        System.out.println("=====================================");
-        System.out.println("UC6 - Map Bogie to Capacity (HashMap)");
-        System.out.println("=====================================");
-
-        // Create HashMap
-        Map<String, Integer> capacityMap = new HashMap<>();
-
-        // Add bogies with capacity
-        capacityMap.put("Sleeper", 72);
-        capacityMap.put("AC", 50);
-        capacityMap.put("FirstClass", 40);
-        capacityMap.put("Cargo", 100);
-
-        // Display all bogies with capacity
-        System.out.println("\nBogie Capacity Details:");
-        for (Map.Entry<String, Integer> entry : capacityMap.entrySet()) {
-            System.out.println(entry.getKey() + " → Capacity: " + entry.getValue());
+        public Bogie(String name, int capacity) {
+            this.name = name;
+            this.capacity = capacity;
         }
 
-        // Access specific bogie
-        System.out.println("\nCapacity of Sleeper: " + capacityMap.get("Sleeper"));
+        public String getName() {
+            return name;
+        }
 
-        System.out.println("\nUC6 operations completed successfully...");
+        public int getCapacity() {
+            return capacity;
+        }
+
+        @Override
+        public String toString() {
+            return "Bogie [name=" + name + ", capacity=" + capacity + "]";
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println("=== Train Consist Management App ===");
+
+        // Create a List<Bogie> to store passenger bogies (simulating UC7 creation)
+        List<Bogie> bogies = new ArrayList<>();
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("Second Class", 90));
+        bogies.add(new Bogie("First Class", 24));
+
+        System.out.println("Original Bogie List:");
+        bogies.forEach(System.out::println);
+
+        System.out.println("\n--- Filtering Logic Execution ---");
+        
+        // Apply filter(b -> b.capacity > 60)
+        int threshold = 60;
+        List<Bogie> highCapacityBogies = bogies.stream()
+                .filter(b -> b.getCapacity() > threshold)
+                .collect(Collectors.toList());
+
+        System.out.println("\nBogies with capacity > " + threshold + ":");
+        highCapacityBogies.forEach(System.out::println);
+
+        System.out.println("\n--- Original Collection Integrity ---");
+        System.out.println("Original List Size: " + bogies.size() + " (Unchanged)");
     }
 }
