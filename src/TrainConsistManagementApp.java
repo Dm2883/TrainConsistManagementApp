@@ -13,45 +13,57 @@ public class TrainConsistManagementApp {
             this.capacity = capacity;
         }
 
-        public String getName() {
-            return name;
-        }
-
         public int getCapacity() {
             return capacity;
-        }
-
-        @Override
-        public String toString() {
-            return "Bogie [name=" + name + ", capacity=" + capacity + "]";
         }
     }
 
     public static void main(String[] args) {
         System.out.println("=== Train Consist Management App ===");
+        System.out.println("--- UC13: Performance Comparison (Loops vs Streams) ---\n");
 
-        // Create a List<Bogie> to store passenger bogies (simulating UC7 creation)
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("Second Class", 90));
-        bogies.add(new Bogie("First Class", 24));
+        System.out.println("Generating Large Dataset (1,000,000 Bogies)...");
+        List<Bogie> dataset = new ArrayList<>();
+        // Mix of capacities to provide a realistic filtering load
+        for (int i = 0; i < 1_000_000; i++) {
+            dataset.add(new Bogie("Passenger Bogie", (i % 2 == 0) ? 72 : 50));
+        }
+        System.out.println("Dataset ready.\n");
 
-        System.out.println("Original Bogie List:");
-        bogies.forEach(System.out::println);
+        // --- LOOP-BASED FILTERING ---
+        System.out.println("[1] Initiating Loop-Based Filtering...");
+        long loopStartTime = System.nanoTime();
 
-        System.out.println("\n--- Filtering Logic Execution ---");
+        List<Bogie> loopFilteredBogies = new ArrayList<>();
+        for (Bogie bogie : dataset) {
+            if (bogie.getCapacity() > 60) {
+                loopFilteredBogies.add(bogie);
+            }
+        }
 
-        // Apply filter(b -> b.capacity > 60)
-        int threshold = 60;
-        List<Bogie> highCapacityBogies = bogies.stream()
-                .filter(b -> b.getCapacity() > threshold)
+        long loopEndTime = System.nanoTime();
+        long loopDurationNs = loopEndTime - loopStartTime;
+        System.out.println("Loop Filtered Size: " + loopFilteredBogies.size());
+        System.out.println("Loop Execution Time: " + loopDurationNs + " ns (" + (loopDurationNs / 1_000_000.0) + " ms)\n");
+
+        // --- STREAM-BASED FILTERING ---
+        System.out.println("[2] Initiating Stream-Based Filtering...");
+        long streamStartTime = System.nanoTime();
+
+        List<Bogie> streamFilteredBogies = dataset.stream()
+                .filter(b -> b.getCapacity() > 60)
                 .collect(Collectors.toList());
 
-        System.out.println("\nBogies with capacity > " + threshold + ":");
-        highCapacityBogies.forEach(System.out::println);
+        long streamEndTime = System.nanoTime();
+        long streamDurationNs = streamEndTime - streamStartTime;
+        System.out.println("Stream Filtered Size: " + streamFilteredBogies.size());
+        System.out.println("Stream Execution Time: " + streamDurationNs + " ns (" + (streamDurationNs / 1_000_000.0) + " ms)\n");
 
-        System.out.println("\n--- Original Collection Integrity ---");
-        System.out.println("Original List Size: " + bogies.size() + " (Unchanged)");
+        // --- VALIDATION AND RESULT CHECKS ---
+        System.out.println("[3] Validation Checks");
+        boolean sizesMatch = (loopFilteredBogies.size() == streamFilteredBogies.size());
+        System.out.println("Match Confirmed? " + sizesMatch);
+        System.out.println("Are timestamps logically positive? " + (loopDurationNs > 0 && streamDurationNs > 0));
+        System.out.println("Filtering excludes items <= 60? " + (loopFilteredBogies.size() < dataset.size()));
     }
 }
