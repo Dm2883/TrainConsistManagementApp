@@ -1,57 +1,44 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+public class UseCase15TrainConsistMgmt {
 
-public class TrainConsistManagementApp {
+    // Custom Runtime Exception
+    static class CargoSafetyException extends RuntimeException {
+        public CargoSafetyException(String message) {
+            super(message);
+        }
+    }
 
-    static class Bogie {
-        private String name;
-        private int capacity;
+    // Goods Bogie class
+    static class GoodsBogie {
+        String shape;
+        String cargo;
 
-        public Bogie(String name, int capacity) {
-            this.name = name;
-            this.capacity = capacity;
+        GoodsBogie(String shape) {
+            this.shape = shape;
         }
 
-        public String getName() {
-            return name;
-        }
+        void assignCargo(String cargo) {
+            try {
+                // Rule: Rectangular bogie cannot carry Petroleum
+                if (shape.equalsIgnoreCase("Rectangular") && cargo.equalsIgnoreCase("Petroleum")) {
+                    throw new CargoSafetyException("Unsafe cargo assignment!");
+                }
 
-        public int getCapacity() {
-            return capacity;
-        }
+                this.cargo = cargo;
+                System.out.println("Cargo assigned successfully: " + cargo);
 
-        @Override
-        public String toString() {
-            return "Bogie [name=" + name + ", capacity=" + capacity + "]";
+            } catch (CargoSafetyException e) {
+                System.out.println("Error: " + e.getMessage());
+            } finally {
+                System.out.println("Assignment attempt completed.\n");
+            }
         }
     }
 
     public static void main(String[] args) {
-        System.out.println("=== Train Consist Management App ===");
+        GoodsBogie bogie1 = new GoodsBogie("Rectangular");
+        GoodsBogie bogie2 = new GoodsBogie("Cylindrical");
 
-        // Create a List<Bogie> to store passenger bogies (simulating UC7 creation)
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("Second Class", 90));
-        bogies.add(new Bogie("First Class", 24));
-
-        System.out.println("Original Bogie List:");
-        bogies.forEach(System.out::println);
-
-        System.out.println("\n--- Filtering Logic Execution ---");
-
-        // Apply filter(b -> b.capacity > 60)
-        int threshold = 60;
-        List<Bogie> highCapacityBogies = bogies.stream()
-                .filter(b -> b.getCapacity() > threshold)
-                .collect(Collectors.toList());
-
-        System.out.println("\nBogies with capacity > " + threshold + ":");
-        highCapacityBogies.forEach(System.out::println);
-
-        System.out.println("\n--- Original Collection Integrity ---");
-        System.out.println("Original List Size: " + bogies.size() + " (Unchanged)");
+        bogie1.assignCargo("Petroleum"); // unsafe
+        bogie2.assignCargo("Petroleum"); // safe
     }
 }
