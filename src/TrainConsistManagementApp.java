@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class TrainConsistManagementApp {
 
-    // Regex explicitly defining format TRN-XXXX (4 digits)
+
     private static final Pattern TRAIN_ID_PATTERN = Pattern.compile("^TRN-\\d{4}$");
 
     // Regex explicitly defining format PET-XX (2 uppercase letters)
