@@ -26,8 +26,6 @@ public class TrainConsistManagementApp {
             return "GoodsBogie [type=" + type + ", cargo=" + cargo + "]";
         }
     }
-
-    // Encapsulated safety compliance logic using Streams API and allMatch()
     public static boolean checkSafetyCompliance(List<GoodsBogie> bogies) {
         return bogies.stream()
                 .allMatch(b -> !b.getType().equalsIgnoreCase("Cylindrical")
