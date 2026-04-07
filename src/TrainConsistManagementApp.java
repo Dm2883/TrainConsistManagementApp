@@ -4,7 +4,6 @@ import java.util.List;
 
 public class TrainConsistManagementApp {
 
-    // Create a Bogie class with fields such as name and capacity
     static class Bogie {
         private String name;
         private int capacity;
