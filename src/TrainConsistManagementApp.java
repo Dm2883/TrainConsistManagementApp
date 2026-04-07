@@ -1,51 +1,46 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class TrainConsistManagementApp {
 
-    public static void main(String[] args) {
+    public static void searchBogie(List<String> bogies, String searchId) {
 
-        // Scenario 1: Empty train
-        String[] emptyTrain = {};
-
-        try {
-            searchBogie(emptyTrain, "BG101");
-        } catch (IllegalStateException e) {
-            System.out.println("Error: " + e.getMessage());
+        if (bogies.isEmpty()) {
+            throw new IllegalStateException("Cannot perform search: Train has no bogies");
         }
 
-        // Scenario 2: Train with bogies
-        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412"};
-
-        try {
-            searchBogie(bogieIds, "BG309");
-        } catch (IllegalStateException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-
-    // Method implementing Fail-Fast Defensive Check
-    public static void searchBogie(String[] bogieIds, String searchId) {
-
-        // ✅ State Validation (Fail-Fast)
-        if (bogieIds == null || bogieIds.length == 0) {
-            throw new IllegalStateException(
-                    "Train has no bogies. Search operation cannot be performed."
-            );
-        }
-
-        // ---- Linear Search ----
         boolean found = false;
 
-        for (String id : bogieIds) {
+        for (String id : bogies) {
             if (id.equals(searchId)) {
                 found = true;
                 break;
             }
         }
 
-        // ---- Result ----
         if (found) {
-            System.out.println("Bogie found: " + searchId);
+            System.out.println("Bogie ID found: " + searchId);
         } else {
-            System.out.println("Bogie not found: " + searchId);
+            System.out.println("Bogie ID not found: " + searchId);
         }
+    }
+
+    public static void main(String[] args) {
+
+        System.out.println("=== UC20: Exception Handling During Search Operations ===");
+
+        List<String> bogies = new ArrayList<>();
+
+        try {
+            searchBogie(bogies, "BG101");
+        } catch (IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        bogies.add("BG101");
+        bogies.add("BG205");
+        bogies.add("BG309");
+
+        searchBogie(bogies, "BG205");
     }
 }
