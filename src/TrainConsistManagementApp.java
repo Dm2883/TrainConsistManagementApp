@@ -1,51 +1,41 @@
+import java.util.Arrays;
+
 public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
 
-        // Case 1: Empty train
-        String[] bogieIds = {};   // EMPTY ARRAY
+        System.out.println("=== UC19: Binary Search for Bogie ID ===");
+
+        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
 
         String searchId = "BG309";
 
-        try {
-            searchBogie(bogieIds, searchId);
-        } catch (IllegalStateException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        System.out.println("Sorted bogie IDs:");
+        System.out.println(Arrays.toString(bogieIds));
 
-        // Case 2: Non-empty train
-        String[] bogieIds2 = {"BG101", "BG205", "BG309", "BG412"};
-
-        try {
-            searchBogie(bogieIds2, searchId);
-        } catch (IllegalStateException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-
-    // Search method with FAIL-FAST validation
-    public static void searchBogie(String[] bogieIds, String searchId) {
-
-        // ✅ Defensive Programming (Fail-Fast)
-        if (bogieIds == null || bogieIds.length == 0) {
-            throw new IllegalStateException("No bogies available in the train. Cannot perform search.");
-        }
-
-        // ---- Linear Search Logic ----
+        int low = 0;
+        int high = bogieIds.length - 1;
         boolean found = false;
 
-        for (String id : bogieIds) {
-            if (id.equals(searchId)) {
+        while (low <= high) {
+
+            int mid = (low + high) / 2;
+
+            int comparison = searchId.compareTo(bogieIds[mid]);
+
+            if (comparison == 0) {
                 found = true;
+                System.out.println("Bogie ID found at index: " + mid);
                 break;
+            } else if (comparison > 0) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
             }
         }
 
-        // ---- Result ----
-        if (found) {
-            System.out.println("Bogie found: " + searchId);
-        } else {
-            System.out.println("Bogie not found: " + searchId);
+        if (!found) {
+            System.out.println("Bogie ID not found: " + searchId);
         }
     }
 }
