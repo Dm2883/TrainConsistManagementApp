@@ -24,7 +24,7 @@ public class TrainConsistManagementApp {
 
         System.out.println("Generating Large Dataset (1,000,000 Bogies)...");
         List<Bogie> dataset = new ArrayList<>();
-        // Mix of capacities to provide a realistic filtering load
+        
         for (int i = 0; i < 1_000_000; i++) {
             dataset.add(new Bogie("Passenger Bogie", (i % 2 == 0) ? 72 : 50));
         }
