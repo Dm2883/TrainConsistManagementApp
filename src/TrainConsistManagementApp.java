@@ -1,4 +1,4 @@
-public class UseCase16TrainConsistMgmt {
+public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
 
