@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class UseCase17TrainConsistMgmt {
+public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
 
