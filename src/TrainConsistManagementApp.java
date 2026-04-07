@@ -1,4 +1,4 @@
-public class UseCase15TrainConsistMgmt {
+public class TrainConsistManagementApp {
 
     // Custom Runtime Exception
     static class CargoSafetyException extends RuntimeException {
