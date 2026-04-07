@@ -1,32 +1,17 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
-public class TrainConsistManagementApp {
+public class UseCase17TrainConsistMgmt {
 
     public static void main(String[] args) {
 
-        System.out.println("=====================================");
-        System.out.println("UC6 - Map Bogie to Capacity (HashMap)");
-        System.out.println("=====================================");
+        String[] bogieNames = {"Sleeper", "AC Chair", "First Class", "General", "Luxury"};
 
-        // Create HashMap
-        Map<String, Integer> capacityMap = new HashMap<>();
+        System.out.println("Before Sorting:");
+        System.out.println(Arrays.toString(bogieNames));
 
-        // Add bogies with capacity
-        capacityMap.put("Sleeper", 72);
-        capacityMap.put("AC", 50);
-        capacityMap.put("FirstClass", 40);
-        capacityMap.put("Cargo", 100);
+        Arrays.sort(bogieNames);
 
-        // Display all bogies with capacity
-        System.out.println("\nBogie Capacity Details:");
-        for (Map.Entry<String, Integer> entry : capacityMap.entrySet()) {
-            System.out.println(entry.getKey() + " → Capacity: " + entry.getValue());
-        }
-
-        // Access specific bogie
-        System.out.println("\nCapacity of Sleeper: " + capacityMap.get("Sleeper"));
-
-        System.out.println("\nUC6 operations completed successfully...");
+        System.out.println("After Sorting:");
+        System.out.println(Arrays.toString(bogieNames));
     }
 }
